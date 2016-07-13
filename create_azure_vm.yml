@@ -1,0 +1,47 @@
+---
+- name: リソースグループを作成
+  azure_rm_resourcegroup:
+    name: TestingAnsible
+    location: japaneast
+
+- name: 仮想ネットワークを作成
+  azure_rm_virtualnetwork:
+    resource_group: TestingAnsible
+    name: vn01
+    address_prefixes_cidr:
+      - "10.0.0.0/16"
+
+- name: サブネットを作成
+  azure_rm_subnet:
+    resource_group: TestingAnsible
+    virtual_network_name: vn01
+    name: subnet01
+    address_prefix_cidr: "10.0.0.0/24"
+
+- name: Windows仮想マシンを作成
+  azure_rm_virtualmachine:
+    name: ansiblewinvm01
+    resource_group: TestingAnsible
+    vm_size: Standard_D1
+    public_ip_allocation_method: Dynamic
+    admin_username: MyAdminName
+    admin_password: MyAdminP@ssw0rd
+    open_ports:
+      - 3389
+      - 5986
+    os_type: Windows
+    image:
+      publisher: MicrosoftWindowsServer
+      offer: WindowsServer
+      sku: Windows-Server-Technical-Preview
+      version: latest
+    tags:
+      ansible-target: "true"
+  register: azure_win_vm_status
+
+- debug:
+    var: azure_win_vm_status
+
+- name: 作成した仮想マシンのパブリックIPを表示
+  debug:
+    msg: "Public IP Address: {{ azure_win_vm_status.state.properties.networkProfile.networkInterfaces.0.properties.ipConfigurations.0.properties.publicIPAddress.properties.ipAddress }}"

@@ -1,0 +1,6 @@
+---
+- name: Azure上でVMを作成する
+  hosts: localhost
+  connection: local
+  tasks:
+    - include: create_azure_vm.yml
