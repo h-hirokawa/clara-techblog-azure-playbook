@@ -39,9 +39,6 @@
       ansible-target: "true"
   register: azure_win_vm_status
 
-- debug:
-    var: azure_win_vm_status
-
 - name: 作成した仮想マシンのパブリックIPを表示
   debug:
-    msg: "Public IP Address: {{ azure_win_vm_status.state.properties.networkProfile.networkInterfaces.0.properties.ipConfigurations.0.properties.publicIPAddress.properties.ipAddress }}"
+    msg: "Public IP Address: {{ azure_win_vm_status.ansible_facts.azure_rm_vm.properties.networkProfile.networkInterfaces.0.properties.ipConfigurations.0.properties.publicIPAddress.properties.ipAddress }}"
