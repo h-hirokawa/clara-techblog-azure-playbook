@@ -1,0 +1,1 @@
+xxx.xxx.xxx.xxx ansible_connection=winrm ansible_winrm_server_cert_validation=ignore ansible_user=MyAdminName ansible_password=MyAdminP@ssw0rd
